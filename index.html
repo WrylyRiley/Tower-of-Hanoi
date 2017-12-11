@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Tower of Hanoi</title>
   </head>
 
@@ -19,7 +20,23 @@
       </nav>
       <aside class="game-buttons"></aside>
       <main>
-        <div class="minimum-moves"></div>
+        <div class="disc-container">
+          <div class="tower-container" id="tower-container-one">
+            <div class="tower" id="tower-one">
+            </div>
+            <div class="base" id="base-one"></div>
+          </div>
+        </div>
+
+        <div class="tower-container" id="tower-container-two">
+          <div class="tower" id="tower-two"></div>
+          <div class="base" id="base-two"></div>
+        </div>
+
+        <div class="tower-container" id="tower-container-three">
+          <div class="tower" id="tower-three"></div>
+          <div class="base" id="base-three"></div>
+        </div>
       </main>
       <aside class="extra-container"></aside>
       <footer>
