@@ -12,22 +12,39 @@ body {
   width: 90vw;
   height: 90vh;
   display: grid;
-  grid-template-columns: 5fr 1fr 12fr 5fr 1fr 5fr;
-  grid-template-rows: 5fr 1fr 2fr 1fr 15fr 2fr 1fr 2fr;
+  grid-template-columns: 5fr 1fr 17fr 1fr 5fr;
+  grid-template-rows: 5fr 1fr 2fr 1fr 16fr 1fr 1fr 2fr;
 }
 
-main {
+/* towers and bases */
+.tower-elements,
+.disc-elements,
+.base-elements {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: green;
+}
+.tower-elements,
+.disc-elements {
+  grid-area: 5 / 3 / 6 / 4;
+}
+
+.base-elements {
+  grid-area: 6 / 3 / 7 / 4;
+}
+.disc-elements {
+  z-index: 4;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .tower-container,
-.disc-container {
-  height: 95%;
+.disc-container,
+.base-container {
+  height: 100%;
   width: calc(95%/3);
-  margin: 20px;
-  background-color: blueviolet;
+  margin: 0 10px;
+  /* center all elements within div */
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -35,33 +52,46 @@ main {
 }
 
 .disc-container {
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 3;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .tower {
   height: 250px;
-  width: 15px;
+  width: 10px;
   /* margin: 10px 0 5px 0; */
   background-color: orangered;
   border: 1px solid black;
+  /* mesh bottom of tower into base */
   border-bottom: 0;
   margin: -1px;
-  z-index: 2;
+  z-index: 3;
   border-radius: 25px 25px 0 0;
 }
 
+.disc {
+  margin-top: 3px;
+  height: 20px;
+}
+
 .base {
-  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   width: 100%;
   background-color: orangered;
   border: 1px solid black;
-  border-radius: 25px;
+  border-radius: 25px 25px 0 0;
+  z-index: 2;
 }
 
-header {
+.game-container header {
   background-color: blue;
-  grid-area: 1 / 3 / 2 / 5;
+  grid-area: 1 / 3 / 2 / 4;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,7 +108,7 @@ nav {
   justify-content: center;
   align-items: center;
   background-color: purple;
-  grid-area: 3 / 3 / 4 / 5;
+  grid-area: 3 / 3 / 4 / 4;
 }
 
 .game-buttons {
@@ -86,14 +116,9 @@ nav {
   grid-area: 5 / 1 / 7 / 2;
 }
 
-main {
-  background-color: green;
-  grid-area: 5 / 3 / 7 / 5;
-}
-
-.extra-container {
+.instructions {
   background-color: red;
-  grid-area: 5 / 6 / 7 / 7;
+  grid-area: 5 / 5 / 7 / 6;
 }
 
 footer {
@@ -101,9 +126,13 @@ footer {
   justify-content: center;
   align-items: center;
   background-color: cornflowerblue;
-  grid-area: 8 / 3 / 9 / 5;
+  grid-area: 8 / 3 / 9 / 4;
 }
-footer h3 {
+h3 {
   font-family: "Nunito", sans-serif;
   text-align: center;
+}
+.base h3 {
+  font-size: 15px;
+  line-height: 5px;
 }
