@@ -53,43 +53,61 @@ var towers = {
 // first: need to populate grid with towers
 // towers height will be a function of the number of disks. If we say each disk is 15px tall, multiply that by numOfDisks
 
-// populateGame()
+populateGame()
 
 function populateGame() {
+  // Indicates first tower's column, first available spot
+  let gridColumn = 3
+  let gridRow = 21
   generateWidths()
   $(".tower").css("height", `${disks.towerHeight()}px`)
   for (let i = 0; i < disks.numDisks; i++) {
+    gridRow -= 1
     //add disks and give them an attribute to show "weight"
-    generateDisks(i + 1, disks.widths[i])
+    generateDisk(i + 1, disks.widths[i], gridRow, gridColumn)
   }
 }
 
 function resetGame() {}
 
-function generateDisks(diskNum, newWidth) {
-  let currentDisk = $("#diskContainerOne").append(
-    `<div class="disk" data-weight=${diskNum} data-tower="1"></div>`
-  )
+function generateDisk(diskNum, newWidth, gridRow, gridColumn) {
+  // Create new disk
+  let currentDisk = $("<div></div>", {
+    class: "disk",
+    "data-weight": `${diskNum}`,
+    "data-tower": "1"
+  })
+  // Unshift disk number to array. Maybe I'll use this for tracking
   towers.one.unshift(`${diskNum}`)
+  // Add event listener
   currentDisk.on(
     "click",
-    diskHover(currentDisk.attr("data-weight"), currentDisk.attr("data-tower"))
+    diskHover($(this).attr("data-weight"), $(this).attr("data-tower"))
   )
   // Chaining CSS in jQuery, use JSON object: https://stackoverflow.com/questions/5094788/jquery-chaining
+
+  $(".game-container").append(currentDisk)
+
   currentDisk.css({
     "background-color": disks.colors[diskNum],
-    height: "50px",
+    height: "100%",
     width: newWidth + "%",
-    "grid-area": `${diskNum + 1} / 1 / ${diskNum} / 2`
+    "grid-row": `${gridRow} / span 1`,
+    "grid-column": `${gridColumn} / span 1`,
+    "justify-self": "center",
+    "align-self": "end",
+    "z-index": 3,
+    border: "1px solid black"
   })
 }
 
 function generateWidths() {
-  diskIncrement = 100 / (disks.numDisks + 5)
+  diskIncrement = 5.625
   for (let i = 0; i < disks.numDisks; i++) {
-    disks.widths.push(98 - diskIncrement * i)
+    disks.widths.push(95.625 - diskIncrement * i)
   }
 }
+
 function diskHover(weight, tower) {
   //check if disk is top disk. return empty if not
   gameVars.diskIsHovering = true

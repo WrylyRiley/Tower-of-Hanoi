@@ -26,12 +26,11 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  max-height: 50px;
 }
 
 h1 {
   font-family: "Nunito", sans-serif;
-  /* font-size: 50px; */
+  font-size: 50px;
   letter-spacing: 3px;
   text-decoration: underline;
 }
@@ -65,10 +64,12 @@ footer {
   grid-row: 23 / span 1;
   grid-column: 3 / span 3;
 }
+
 h3 {
   font-family: "Nunito", sans-serif;
   text-align: center;
 }
+
 .base h3 {
   font-size: 15px;
   line-height: 5px;
@@ -81,10 +82,13 @@ h3 {
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 100%;
+  width: 95%;
   background-color: orangered;
   border: 1px solid black;
   border-radius: 25px 25px 0 0;
+  justify-self: center;
+  align-self: center;
+  /* max-height: 25px; */
 }
 
 #baseOne {
@@ -103,18 +107,11 @@ h3 {
 /* Base CSS */
 
 /* Tower CSS */
-.tower-container {
-  height: 100%;
-  width: calc(95%/3);
-  margin: 0 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-}
 .tower {
-  height: 250px;
+  height: 100px;
   width: 10px;
+  justify-self: center;
+  align-self: end;
   background-color: orangered;
   border: 1px solid black;
   /* mesh bottom of tower into base */
@@ -123,11 +120,30 @@ h3 {
   z-index: 3;
   border-radius: 25px 25px 0 0;
 }
+
+#towerOne {
+  grid-row: 5 / span 16;
+  grid-column: 3 / span 1;
+}
+
+#towerTwo {
+  grid-row: 5 / span 16;
+  grid-column: 4 / span 1;
+}
+
+#towerThree {
+  grid-row: 5 / span 16;
+  grid-column: 5 / span 1;
+}
 /* Tower CSS */
 
 /* Disk CSS */
 .disk {
-  margin: 3px 4px 0 4px;
   height: 100%;
 }
 /* Disk CSS */
+
+.disk-container {
+  grid-row: 5 / span 16;
+  grid-column: 3 / span 3;
+}
