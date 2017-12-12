@@ -1,21 +1,19 @@
-//function to create default number of discs and add click listeners
+//function to create default number of disks and add click listeners
 // start game
-populateGame()
-
 
 var gameVars = {
-  discIsHovering: false,
+  diskIsHovering: false,
   towerOrigin: null,
-  towerDestination: null;
+  towerDestination: null
 }
 
-var discs = {
-  maxDiscs: 15,
-  minDiscs: 3,
-  numDiscs: 5,
-  discHeight: 30,
+var disks = {
+  maxDisks: 15,
+  minDisks: 3,
+  numDisks: 5,
+  diskHeight: 30,
   towerHeight: function() {
-    return this.discHeight * (this.numDiscs + 2)
+    return this.diskHeight * (this.numDisks + 2)
   },
   colors: [
     "seagreen",
@@ -33,7 +31,11 @@ var discs = {
     "olive",
     "royalblue",
     "saddlebrown"
-  ]
+  ],
+  widths: [],
+  minimumMoves: function() {
+    return Math.pow(2, this.numDisks) - 1
+  }
 }
 
 var towers = {
@@ -43,39 +45,52 @@ var towers = {
 }
 
 // first: need to populate grid with towers
-// towers height will be a function of the number of discs. If we say each disc is 15px tall, multiply that by numOfDiscs
+// towers height will be a function of the number of disks. If we say each disk is 15px tall, multiply that by numOfDisks
+
+populateGame()
 
 function populateGame() {
-  let multiplier = 1 / discs.numDiscs
-  let currentMultiplier = 0
-  $(".tower").css("height", `${discs.towerHeight()}px`)
-
-  for (let i = 0; i < discs.numDiscs; i++) {
-    //add discs and give them an attribute to show "weight"
-    $("#discContainerOne").append(
-      `<div class="disc" data-weight=${i + 1} data-tower="1"></div>`
-    )
-    towers.one.push(`${i + 1}`)
-    this.on(
-      "click",
-      discHover(this.attr("data-weight"), this.attr("data-tower"))
-    )
+  generateWidths()
+  gameVars.diskWidth = 100
+  $(".tower").css("height", `${disks.towerHeight()}px`)
+  for (let i = 0; i < disks.numDisks; i++) {
+    //add disks and give them an attribute to show "weight"
+    generateDisks(i + 1, disks.widths[i])
   }
 }
-
 function resetGame() {}
 
-function generateDiscs() {}
-
-function discHover(weight, tower) {
-  //check if disc is top disc. return empty if not
-  gameVars.discIsHovering = true
-  //change css on selected div and make it hover
-
+function generateDisks(diskNum, width) {
+  let currentDisk = $("#diskContainerOne").append(
+    `<div class="disk" data-weight=${diskNum} data-tower="1"></div>`
+  )
+  towers.one.unshift(`${diskNum}`)
+  currentDisk.on(
+    "click",
+    diskHover(currentDisk.attr("data-weight"), currentDisk.attr("data-tower"))
+  )
+  // Chaining CSS in jQuery, use JSON object: https://stackoverflow.com/questions/5094788/jquery-chaining
+  currentDisk.css({
+    "background-color": disks.colors[diskNum],
+    height: "20px",
+    width: `${width}%`
+  })
 }
 
-// second: need to populate tower 1 with 5 discs (default). for loop, evelis, etc.
+function generateWidths() {
+  diskIncrement = 100 / (disks.numDisks + 1)
+  for (let i = 0; i < disks.numDisks; i++) {
+    disks.widths.push(100 - diskIncrement * i)
+  }
+}
+function diskHover(weight, tower) {
+  //check if disk is top disk. return empty if not
+  gameVars.diskIsHovering = true
+  //change css on selected div and make it hover
+}
 
-// third: need to interact with discs somehow
+// second: need to populate tower 1 with 5 disks (default). for loop, evelis, etc.
+
+// third: need to interact with disks somehow
 
 // draw the rest of the owl

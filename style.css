@@ -18,7 +18,7 @@ body {
 
 /* towers and bases */
 .tower-elements,
-.disc-elements,
+.disk-elements,
 .base-elements {
   display: flex;
   justify-content: center;
@@ -26,20 +26,20 @@ body {
   background-color: green;
 }
 .tower-elements,
-.disc-elements {
+.disk-elements {
   grid-area: 5 / 3 / 6 / 4;
 }
 
 .base-elements {
   grid-area: 6 / 3 / 7 / 4;
 }
-.disc-elements {
+.disk-elements {
   z-index: 4;
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .tower-container,
-.disc-container,
+.disk-container,
 .base-container {
   height: 100%;
   width: calc(95%/3);
@@ -51,13 +51,13 @@ body {
   flex-flow: column;
 }
 
-.disc-container {
+/* .disk-container {
   display: flex;
   flex-flow: column;
   justify-content: flex-end;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.1);
-}
+} */
 
 .tower {
   height: 250px;
@@ -72,9 +72,10 @@ body {
   border-radius: 25px 25px 0 0;
 }
 
-.disc {
+.disk {
   margin-top: 3px;
   height: 20px;
+  z-index: 5;
 }
 
 .base {
