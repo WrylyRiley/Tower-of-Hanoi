@@ -51,16 +51,16 @@ populateGame()
 
 function populateGame() {
   generateWidths()
-  gameVars.diskWidth = 100
   $(".tower").css("height", `${disks.towerHeight()}px`)
   for (let i = 0; i < disks.numDisks; i++) {
     //add disks and give them an attribute to show "weight"
     generateDisks(i + 1, disks.widths[i])
   }
 }
+
 function resetGame() {}
 
-function generateDisks(diskNum, width) {
+function generateDisks(diskNum, newWidth) {
   let currentDisk = $("#diskContainerOne").append(
     `<div class="disk" data-weight=${diskNum} data-tower="1"></div>`
   )
@@ -72,15 +72,16 @@ function generateDisks(diskNum, width) {
   // Chaining CSS in jQuery, use JSON object: https://stackoverflow.com/questions/5094788/jquery-chaining
   currentDisk.css({
     "background-color": disks.colors[diskNum],
-    height: "20px",
-    width: `${width}%`
+    height: "50px",
+    width: newWidth + "%",
+    "grid-area": `${diskNum + 1} / 1 / ${diskNum} / 2`
   })
 }
 
 function generateWidths() {
-  diskIncrement = 100 / (disks.numDisks + 1)
+  diskIncrement = 100 / (disks.numDisks + 5)
   for (let i = 0; i < disks.numDisks; i++) {
-    disks.widths.push(100 - diskIncrement * i)
+    disks.widths.push(98 - diskIncrement * i)
   }
 }
 function diskHover(weight, tower) {

@@ -33,13 +33,12 @@ body {
 .base-elements {
   grid-area: 6 / 3 / 7 / 4;
 }
+
 .disk-elements {
   z-index: 4;
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .tower-container,
-.disk-container,
 .base-container {
   height: 100%;
   width: calc(95%/3);
@@ -48,7 +47,17 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex-flow: column;
+  flex-direction: column;
+}
+
+.disk-container {
+  background-color: red;
+  height: 100%;
+  width: calc(95%/3);
+  margin: 0 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(15, 1fr);
 }
 
 /* .disk-container {
@@ -75,7 +84,7 @@ body {
 .disk {
   margin-top: 3px;
   height: 20px;
-  z-index: 5;
+  /* z-index: 5; */
 }
 
 .base {
