@@ -8,10 +8,10 @@ var gameVars = {
 }
 
 var disks = {
-  maxDisks: 16,
+  maxDisks: 15,
   minDisks: 3,
-  numDisks: 5,
-  diskHeight: 30,
+  numDisks: 15,
+  diskHeight: 25,
   towerHeight: function() {
     return this.diskHeight * (this.numDisks + 2)
   },
@@ -32,7 +32,7 @@ var disks = {
     "royalblue",
     "saddlebrown"
   ],
-  widths: [],
+  widths: {},
   minimumMoves: function() {
     return Math.pow(2, this.numDisks) - 1
   }
@@ -45,9 +45,9 @@ var towers = {
   twoEnd: 5,
   threeStart: 5,
   threeEnd: 6,
-  one: [],
-  two: [],
-  three: []
+  tower1: [],
+  tower2: [],
+  tower3: []
 }
 
 // first: need to populate grid with towers
@@ -61,16 +61,16 @@ function populateGame() {
   let gridRow = 21
   generateWidths()
   $(".tower").css("height", `${disks.towerHeight()}px`)
-  for (let i = 0; i < disks.numDisks; i++) {
+  for (let i = disks.numDisks; i > 0; i--) {
     gridRow -= 1
     //add disks and give them an attribute to show "weight"
-    generateDisk(i + 1, disks.widths[i], gridRow, gridColumn)
+    generateDisk(i + 1, i - 1, gridRow, gridColumn)
   }
 }
 
 function resetGame() {}
 
-function generateDisk(diskNum, newWidth, gridRow, gridColumn) {
+function generateDisk(diskNum, colorNum, gridRow, gridColumn) {
   // Create new disk
   let currentDisk = $("<div></div>", {
     class: "disk",
@@ -78,40 +78,59 @@ function generateDisk(diskNum, newWidth, gridRow, gridColumn) {
     "data-tower": "1"
   })
   // Unshift disk number to array. Maybe I'll use this for tracking
-  towers.one.unshift(`${diskNum}`)
-  // Add event listener
-  currentDisk.on(
-    "click",
-    diskHover($(this).attr("data-weight"), $(this).attr("data-tower"))
-  )
+  towers.tower1.unshift(`${diskNum}`)
   // Chaining CSS in jQuery, use JSON object: https://stackoverflow.com/questions/5094788/jquery-chaining
 
   $(".game-container").append(currentDisk)
 
   currentDisk.css({
-    "background-color": disks.colors[diskNum],
+    //
+    "background-color": disks.colors[colorNum],
     height: "100%",
-    width: newWidth + "%",
+    width: disks.widths[diskNum - 1] + "%",
     "grid-row": `${gridRow} / span 1`,
     "grid-column": `${gridColumn} / span 1`,
     "justify-self": "center",
     "align-self": "end",
     "z-index": 3,
-    border: "1px solid black"
+    border: "1px solid black",
+    "border-radius": "10px"
   })
 }
 
 function generateWidths() {
   diskIncrement = 5.625
-  for (let i = 0; i < disks.numDisks; i++) {
-    disks.widths.push(95.625 - diskIncrement * i)
+  for (let i = 15; i > 0; i--) {
+    disks.widths[i] = 5.625 + diskIncrement * i
   }
 }
 
-function diskHover(weight, tower) {
-  //check if disk is top disk. return empty if not
-  gameVars.diskIsHovering = true
+function diskHover(clickedTower, tower) {
+  if (towers[tower]) {
+    gameVars.diskIsHovering = true
+  }
+
   //change css on selected div and make it hover
+}
+
+function generateEventListeners() {
+  for (let i = 0; i < 3; i++) {
+    currentTower = $("<div></div>", { id: `tower${i}`, class: "towerListener" })
+
+    currentTower.on("click", diskHover(this, $(this).attr("id")))
+
+    $(".game-container").append(currentTower)
+
+    currentTower.css({
+      height: "100%",
+      width: "100%",
+      "background-color": "rgbs(0, 0, 0, 0)",
+      "grid-row": "5 / span 16",
+      // Applies to columns 3, 4, and 5
+      "grid-column": `${i + 3} / span 1`,
+      "z-index": "10"
+    })
+  }
 }
 
 // second: need to populate tower 1 with 5 disks (default). for loop, evelis, etc.
