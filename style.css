@@ -136,14 +136,3 @@ h3 {
   grid-column: 5 / span 1;
 }
 /* Tower CSS */
-
-/* Disk CSS */
-.disk {
-  height: 100%;
-}
-/* Disk CSS */
-
-.disk-container {
-  grid-row: 5 / span 16;
-  grid-column: 3 / span 3;
-}
