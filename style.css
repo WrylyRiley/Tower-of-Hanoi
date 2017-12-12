@@ -7,108 +7,31 @@ body {
   justify-content: center;
   align-items: center;
 }
+/* Game Container CSS */
 .game-container {
   margin: 30px 0 0 0;
   width: 90vw;
   height: 90vh;
   display: grid;
-  grid-template-columns: 5fr 1fr 17fr 1fr 5fr;
-  grid-template-rows: 5fr 1fr 2fr 1fr 16fr 1fr 1fr 2fr;
+  grid-template-columns: 5fr 1fr repeat(3, 6fr) 1fr 5fr;
+  grid-template-rows: 5fr 1fr 2fr repeat(19, 1fr) 2fr;
 }
+/* Game Container CSS */
 
-/* towers and bases */
-.tower-elements,
-.disk-elements,
-.base-elements {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: green;
-}
-.tower-elements,
-.disk-elements {
-  grid-area: 5 / 3 / 6 / 4;
-}
-
-.base-elements {
-  grid-area: 6 / 3 / 7 / 4;
-}
-
-.disk-elements {
-  z-index: 4;
-}
-
-.tower-container,
-.base-container {
-  height: 100%;
-  width: calc(95%/3);
-  margin: 0 10px;
-  /* center all elements within div */
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-direction: column;
-}
-
-.disk-container {
-  background-color: red;
-  height: 100%;
-  width: calc(95%/3);
-  margin: 0 10px;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(15, 1fr);
-}
-
-/* .disk-container {
-  display: flex;
-  flex-flow: column;
-  justify-content: flex-end;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.1);
-} */
-
-.tower {
-  height: 250px;
-  width: 10px;
-  /* margin: 10px 0 5px 0; */
-  background-color: orangered;
-  border: 1px solid black;
-  /* mesh bottom of tower into base */
-  border-bottom: 0;
-  margin: -1px;
-  z-index: 3;
-  border-radius: 25px 25px 0 0;
-}
-
-.disk {
-  margin-top: 3px;
-  height: 20px;
-  /* z-index: 5; */
-}
-
-.base {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  background-color: orangered;
-  border: 1px solid black;
-  border-radius: 25px 25px 0 0;
-  z-index: 2;
-}
-
-.game-container header {
+/* General Elements CSS */
+header {
   background-color: blue;
-  grid-area: 1 / 3 / 2 / 4;
+  grid-row: 1 / span 1;
+  grid-column: 3 / span 3;
   display: flex;
   justify-content: center;
   align-items: center;
+  max-height: 50px;
 }
-header h1 {
+
+h1 {
   font-family: "Nunito", sans-serif;
-  font-size: 50px;
+  /* font-size: 50px; */
   letter-spacing: 3px;
   text-decoration: underline;
 }
@@ -118,17 +41,20 @@ nav {
   justify-content: center;
   align-items: center;
   background-color: purple;
-  grid-area: 3 / 3 / 4 / 4;
+  grid-row: 3 / span 1;
+  grid-column: 3 / span 3;
 }
 
 .game-buttons {
   background-color: orange;
-  grid-area: 5 / 1 / 7 / 2;
+  grid-row: 5 / span 16;
+  grid-column: 1 / span 1;
 }
 
 .instructions {
   background-color: red;
-  grid-area: 5 / 5 / 7 / 6;
+  grid-row: 5 / span 16;
+  grid-column: 7 / span 1;
 }
 
 footer {
@@ -136,7 +62,8 @@ footer {
   justify-content: center;
   align-items: center;
   background-color: cornflowerblue;
-  grid-area: 8 / 3 / 9 / 4;
+  grid-row: 23 / span 1;
+  grid-column: 3 / span 3;
 }
 h3 {
   font-family: "Nunito", sans-serif;
@@ -146,3 +73,61 @@ h3 {
   font-size: 15px;
   line-height: 5px;
 }
+/* General Elements CSS */
+
+/* Base CSS */
+.base {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: orangered;
+  border: 1px solid black;
+  border-radius: 25px 25px 0 0;
+}
+
+#baseOne {
+  grid-row: 21 / span 1;
+  grid-column: 3 / span 1;
+}
+#baseTwo {
+  grid-row: 21 / span 1;
+  grid-column: 4 / span 1;
+}
+
+#baseThree {
+  grid-row: 21 / span 1;
+  grid-column: 5 / span 1;
+}
+/* Base CSS */
+
+/* Tower CSS */
+.tower-container {
+  height: 100%;
+  width: calc(95%/3);
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+.tower {
+  height: 250px;
+  width: 10px;
+  background-color: orangered;
+  border: 1px solid black;
+  /* mesh bottom of tower into base */
+  border-bottom: 0;
+  margin-bottom: -1px;
+  z-index: 3;
+  border-radius: 25px 25px 0 0;
+}
+/* Tower CSS */
+
+/* Disk CSS */
+.disk {
+  margin: 3px 4px 0 4px;
+  height: 100%;
+}
+/* Disk CSS */

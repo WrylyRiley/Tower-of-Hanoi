@@ -8,7 +8,7 @@ var gameVars = {
 }
 
 var disks = {
-  maxDisks: 15,
+  maxDisks: 16,
   minDisks: 3,
   numDisks: 5,
   diskHeight: 30,
@@ -39,6 +39,12 @@ var disks = {
 }
 
 var towers = {
+  oneStart: 3,
+  oneEnd: 4,
+  twoStart: 4,
+  twoEnd: 5,
+  threeStart: 5,
+  threeEnd: 6,
   one: [],
   two: [],
   three: []
@@ -47,7 +53,7 @@ var towers = {
 // first: need to populate grid with towers
 // towers height will be a function of the number of disks. If we say each disk is 15px tall, multiply that by numOfDisks
 
-populateGame()
+// populateGame()
 
 function populateGame() {
   generateWidths()
