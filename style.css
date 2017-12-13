@@ -109,7 +109,7 @@ h3 {
 /* Tower CSS */
 .tower {
   height: 100px;
-  width: 10px;
+  width: 7px;
   justify-self: center;
   align-self: end;
   background-color: orangered;

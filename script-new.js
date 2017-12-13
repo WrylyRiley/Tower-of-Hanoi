@@ -1,12 +1,15 @@
 // Disk Class
 class Disk {
   constructor(diskNum, row, col) {
-    this.color = this.determineColor()
+    this.color = null
     this.diskNum = diskNum
-    this.row = convertRow(row)
-    this.col = convertCol(col)
-    this.width = this.calculateWidth()
+    this.row = this.convertRow(row)
+    this.col = this.convertCol(col)
+    this.width = null
     this.sizeInc = 5.666666
+
+    this.calculateWidth()
+    this.determineColor()
   }
 
   calculatePosition() {
@@ -25,11 +28,11 @@ class Disk {
   }
 
   setRow(row) {
-    this.row = convertRow(row)
+    this.row = this.convertRow(row)
   }
 
   setCol(col) {
-    this.col = convertCol(col)
+    this.col = col
   }
   convertRow(row) {
     // Top of gameboard is row 6
@@ -61,13 +64,15 @@ class Disk {
       "royalblue",
       "saddlebrown"
     ]
-    return colors[this.diskNum]
+    this.color = colors[this.diskNum]
   }
 
   calculateWidth() {
-    return this.sizeInc + this.diskNum * this.sizeInc
+    this.width = this.sizeInc + this.diskNum * this.sizeInc
   }
 }
+
+function instantiateDiskProperties() {}
 // End Disk Class
 
 // Game Variables
@@ -77,45 +82,59 @@ var gameVars = {
   numDisks: 5,
   maxDisks: 15,
   diskHovering: false,
-  diskHoveringWhere: null
+  diskHoveringWhere: null,
+  moves: 0
 }
 
 var disks = {
-  // Names like this to avoid doing more unnecessary math when figuring out column that disc sits i
+  // Names like this to avoid doing more unnecessary math when figuring out column that disk sits i
   "tower-3": [],
   "tower-4": [],
-  "tower-5": []
+  "tower-5": [],
+  diskHeight: 25,
+  towerHeight: function() {
+    return this.diskHeight * (gameVars.numDisks + 2)
+  }
 }
 
 // End Game Variables
 
+// GAME START //
+
+initialGenerateDisks()
+generateEventListeners()
+// END GAME START //
+
 // MODEL CONTROLLER //
 
-function initialGenerateDiscs() {
+function initialGenerateDisks() {
+  gameVars.moves = 0
   let row = 1,
     col = 1
+  // Set tower height
+  $(".tower").css("height", `${disks.towerHeight()}px`)
   // Loop through in reverse order to stack properly
   for (let i = gameVars.numDisks; i > 0; i--) {
-    // Instantiate new disc, store to disks object
+    // Instantiate new disk, store to disks object
     disks[`disk-${i}`] = new Disk(i, row, col)
     // store this new disk in a variable for use in this loop
-    let newDisc = disks[`disk${i}`]
+    let newDisk = disks[`disk-${i}`]
     // Increment row
     row++
     // create new div
     let newDiv = $("<div></div>")
     // set ID for later usage
-    newDiv.attr("id", `disk-${newDisc.diskNum}`)
+    newDiv.attr("id", `disk-${newDisk.diskNum}`)
     // Append blank div to game-container
     newDiv.appendTo($(".game-container"))
-    // Push new disc's number to array for later validation. They're pushed in opposite order so popping will always return the top disc
-    gameVars[`tower-${newDisc.col}`].push(newDisc)
+    // Push new disk's number to array for later validation. They're pushed in opposite order so popping will always return the top disk
+    disks[`tower-${newDisk.col}`].push(newDisk)
     // Modify new div's CSS to get it to show up in the correct place
     newDiv.css({
-      "background-color": newDisc.color,
+      "background-color": newDisk.color,
       height: "95%",
-      width: `${newDisc.width}%`,
-      "grid-area": newDisc.calculatePosition(),
+      width: `${newDisk.width}%`,
+      "grid-area": newDisk.calculatePosition(),
       "justify-self": "center",
       "align-self": "end",
       "z-index": 3,
@@ -132,16 +151,17 @@ function generateEventListeners() {
       id: `tower-${i}`
     })
     // add div to gameboard
-    $(".game-container").append(currentTower)
+    $(".game-container").append(newTower)
     // attach event listener
     newTower.on("click", function() {
       diskHover($(this).attr("id"))
+      updateView()
     })
     // Change CSS to make it fit the proper dimensions
-    currentTower.css({
+    newTower.css({
       "grid-row": "5 / span 16",
       // Applies to columns 3, 4, and 5
-      "grid-column": `${i + 3} / span 1`,
+      "grid-column": `${i} / span 1`,
       height: "100%",
       width: "95%",
       "justify-self": "center",
@@ -156,67 +176,89 @@ function diskHover(towerID) {
   // grabs top-most disks from tower array
   // logic check for origin tower or destination tower
   if (gameVars.diskHoveringWhere) {
-    // there is an origin tower, and this run will be to place the disc in a new place
-    var topDisc =
-      disks[gameVars.diskHoveringWhere][gameVars.diskHoveringWhere.length - 1]
+    // there is an origin tower, and this run will be to place the disk in a new place
+    var topDisk = disks[gameVars.diskHoveringWhere]
+    topDisk = topDisk[topDisk.length - 1]
   } else {
     // there is no origin tower, yet
-    var topDisc = disks[towerID][towerID.length - 1]
+    var topDisk = disks[towerID]
+    gameVars.diskHoveringWhere = towerID
+    topDisk = topDisk[topDisk.length - 1]
   }
 
   // checks if a disk is already hovering
   // checks if the clicked tower has any disks
   if (!gameVars.diskHovering && disks[towerID]) {
-    // flags for a hovering disc
+    // flags for a hovering disk
     gameVars.diskHovering = true
     // sets origin tower of newly hovering disk
     gameVars.diskHoveringWhere = towerID
-    // changes discs row number to row-1
-    topDisc.adjustRow(-1)
-    updateView()
+    // changes disks row number to row-1
+    topDisk.adjustRow(-1)
   } else if (gameVars.diskHovering) {
     if (towerID === gameVars.diskHoveringWhere) {
       // Condition where origin tower equals destinaton tower
       // remove hovering flag
+      gameVars.moves++
       gameVars.diskIsHovering = false
       // lowers disk
-      topDisc.adjustRow(1)
+      topDisk.adjustRow(1)
+      // null out origin tower
+      gameVars.diskHoveringWhere = null
     } else {
       // origin and destination are different
       // if destination tower is empty, just place it
-      if (!disks[towerID]) {
-        // swap discs using tower origin ID, and tower destination ID
-        swapDiscs(topDisc, towerID, gameVars[diskHoveringWhere])
+      if (disks[towerID].length === 0) {
+        // swap disks using tower origin ID, and tower destination ID
+        swapDisks(topDisk, towerID)
       } else {
-        if (checkDiscSize(topDisc, towerID)) {
-          swapDiscs(topDisc, towerID, gameVars[diskHoveringWhere])
+        if (checkDiskSize(topDisk, towerID)) {
+          swapDisks(topDisk, towerID)
+        } else {
+          // if this test faisl, the disk will just set itself back down with no other feedback
+          diskHover(gameVars.diskHoveringWhere)
         }
       }
     }
   }
 }
 
-function swapDiscs(topDisc, towerOrigin, towerDestination) {
-  disks[towerOrigin].pop()
-  disks[towerDestination].push(topDisc)
+function swapDisks(topDisk, towerDestination) {
+  gameVars.moves++
+  disks[gameVars.diskHoveringWhere].pop()
+  disks[towerDestination].push(topDisk)
+  //Returns 3-5
+  topDisk.setCol(towerDestination[towerDestination.length - 1])
+  //returns relative row, sets to absolute row
+  topDisk.setRow(towerDestination[towerDestination.length])
 }
-function checkDiscSize(topDisc, towerID) {
-  //if passed disk's number is less than that of the destination tower's top-most disc's number, return true
-  if (topDisc.diskNum < disks[towerID][towerID.length - 1].diskNum) {
+function checkDiskSize(topDisk, towerID) {
+  //if passed disk's number is less than that of the destination tower's top-most disk's number, return true
+  let destinationDiskNum = disks[towerID]
+  destinationDiskNum = destinationDiskNum[destinationDiskNum.length - 1].diskNum
+  if (topDisk.diskNum < destinationDiskNum) {
     return true
   }
   return false
 }
+
+function winCondition() {
+  if (!disks["tower-3"] && !disks["tower-4"] && disks["tower-4"]) {
+    alert("You Win!")
+  }
+}
 // END MODEL CONTROLLER //
 
 // VIEW CONTROLLER //
-// Updates all discs at once acounting for all changes that may occur during gameplay. Heavy overhead, especially for a large number of discs, but I've capped this game at 15, so it shouldn't be a problem
+// Updates all disks at once acounting for all changes that may occur during gameplay. Heavy overhead, especially for a large number of disks, but I've capped this game at 15, so it shouldn't be a problem
 function updateView() {
   for (let i = 3; i < 6; i++) {
-    let tower = `tower-${i}`
+    let tower = disks[`tower-${i}`]
     for (let j = 0; j < tower.length; j++) {
-      let disk = tower[j].diskNum
-      $(`#disk-${disk.diskNum}`).css("grid-area", `${disk.calculatePosition}`)
+      let disk = tower[j]
+      $(`#disk-${disk.diskNum}`).css({
+        "grid-area": `${disk.calculatePosition()}`
+      })
     }
   }
 }
