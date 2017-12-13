@@ -1,6 +1,7 @@
 //function to create default number of disks and add click listeners
 // start game
 
+
 var gameVars = {
   diskIsHovering: false,
   towerOrigin: null,
@@ -41,12 +42,6 @@ var disks = {
 }
 
 var towers = {
-  oneStart: 3,
-  oneEnd: 4,
-  twoStart: 4,
-  twoEnd: 5,
-  threeStart: 5,
-  threeEnd: 6,
   "tower-1": [],
   "tower-2": [],
   "tower-3": []
@@ -80,7 +75,9 @@ function generateDisk(diskNum, colorNum, gridRow, gridColumn) {
   let currentDisk = $("<div></div>", {
     class: "disk",
     id: `disk-${diskNum}`,
-    "data-towerNum": "Tower1"
+    "data-towerNum": "Tower1",
+    col: gridColumn,
+    row: gridRow
   })
   // push disk numbers to array.
   towers["tower-1"].push(`${diskNum}`)
@@ -112,32 +109,32 @@ function generateWidths() {
 
 function diskHover(tower) {
   let workingTower = towers[tower]
-  let discNum = workingTower.length - 1
+  let diskNum = workingTower[workingTower.length - 1]
   //tower format: tower-#
   // let towerNumber = tower.substr(tower.length-1, tower.length)
-  if (towers[tower]) {
+  if (workingTower) {
     if (gameVars.diskIsHovering && disks.sameTower) {
       sameTower = false
       gameVars.diskIsHovering = false
-      $(`#disc-${discNum}`).css({
-        "margin-bottom": "0px"
-      })
+      //Positive row numbers move disks down the grid
+      changeDiskPosition(diskNum, 1, 0)
       return
     }
     //change css on selected div and make it hover
     gameVars.diskIsHovering = true
-    $(`#disc-${discNum}`).css({
-      "margin-bottom": "20px"
-    })
+    //Negative row numbers move disks up the grid
+    changeDiskPosition(diskNum, -1, 0)
   } else {
     return
   }
 }
 
-function placeDisc() {
+function placeDisk() {
   gameVars.moveCounter += 1
   if (gameVars.towerOrigin === gameVars.towerDestination) {
   }
+
+  winConditionCheck()
 }
 
 function generateEventListeners() {
@@ -150,7 +147,7 @@ function generateEventListeners() {
     currentTower.on("click", function() {
       if (disks.diskIsHovering) {
         gameVars.towerDestination = $(this).attr("id")
-        placeDisc()
+        placeDisk()
       } else {
         gameVars.towerOrigin = $(this).attr("id")
         diskHover(gameVars.towerOrigin)
@@ -178,4 +175,21 @@ function generateEventListeners() {
 
 // draw the rest of the owl
 
-function winConditionCheck() {}
+function winConditionCheck() {
+  if (!(towers["tower-1"] && towers["tower-2"])) {
+    alert("You win!")
+  }
+}
+
+function changeDiskPosition(diskNum, rowAdjustment, tower = 0) {
+  $(`disk-${diskNum}`).attr("row", $(this).attr("row") + rowAdjustment)
+  if (tower != 0) {
+    `disk-${diskNum}`.attr("col", gameVars.towerDestination)
+    gameVars.towerDestination.pop()
+    gameVars.towerDestination.push(`disk-${diskNum}`)
+  }
+  $(`disk-${diskNum}`).css({
+    "grid-row-start": $(`disk-${diskNum}`).attr("row"),
+    "grid-col-start": tower + 2
+  })
+}
