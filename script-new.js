@@ -119,7 +119,7 @@ function resetGame() {
   $(".game-piece").remove()
   gameVars.moves = 0
   gameVars.minMoves = Math.pow(2, gameVars.numDisks) - 1
-  $("#minimumMoves").html(`<h3>Minimum Moves: ${gameVars.minMoves}</h3>`)
+  $("#minimumMoves").html(`Minimum Moves: ${gameVars.minMoves}`)
   updateMoves()
 
   initializeParameters()
