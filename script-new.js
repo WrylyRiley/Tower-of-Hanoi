@@ -276,20 +276,6 @@ function checkDiskSize(topDisk, towerID) {
   }
   return false
 }
-
-function winCondition() {
-  if (disks["tower-3"].length === 0 && disks["tower-4"].length === 0) {
-    // alert("You Win!")
-    // Add game win box
-    $("<h3>You Win!</h3>").appendTo($(".game-win"))
-    $(".game-win").css("display", "flex")
-    // add cover to prevent further user input
-    let gameBlock = $("<div></div>")
-    gameBlock.attr("class", "game-block")
-    gameBlock.appendTo($(".game-container"))
-    $(".game-block").css("display", "block")
-  }
-}
 // END MODEL CONTROLLER //
 
 // VIEW CONTROLLER //
@@ -314,5 +300,21 @@ function updateMoves() {
 
 function updateDiskCounter() {
   $("#diskCounter").html(`${gameVars.numDisks} Disks`)
+}
+
+function winCondition() {
+  if (disks["tower-3"].length === 0 && disks["tower-4"].length === 0) {
+    // alert("You Win!")
+    // Add game win box
+    let winBanner = $("<div></div>")
+    winBanner.attr("class", "game-win game-piece")
+    winBanner.html("<h3>You Win!</h3>")
+    winBanner.appendTo($(".game-container"))
+    // add cover to prevent further user input
+    let gameBlock = $("<div></div>")
+    gameBlock.attr("class", "game-block game-piece")
+    gameBlock.appendTo($(".game-container"))
+    $(".game-block").css("display", "block")
+  }
 }
 // END VIEW CONTROLLER //
