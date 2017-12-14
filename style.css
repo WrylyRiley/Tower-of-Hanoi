@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 
 body {
-  background-color: yellowgreen;
+  background-color: lavender;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,7 +20,9 @@ body {
 
 /* General Elements CSS */
 header {
-  background-color: blue;
+  background-color: slategrey;
+  border-radius: 10px;
+  border: 2px solid white;
   grid-row: 1 / span 1;
   grid-column: 3 / span 3;
   display: flex;
@@ -39,13 +41,24 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: purple;
+  background-color: slategrey;
+  border-radius: 10px;
+  border: 2px solid white;
   grid-row: 3 / span 1;
   grid-column: 3 / span 3;
 }
 
+nav a {
+  text-decoration: none;
+  font-family: "Nunito", sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
 .game-buttons {
-  background-color: orange;
+  background-color: slategrey;
+  border-radius: 10px;
+  border: 2px solid white;
   grid-row: 5 / span 16;
   grid-column: 1 / span 1;
   display: flex;
@@ -55,8 +68,8 @@ nav {
 }
 
 .reset-button {
-  background-color: skyblue;
-  color: brown;
+  background-color: darkslategrey;
+  color: white;
   width: 60%;
   border: 1px solid black;
 }
@@ -70,7 +83,9 @@ nav {
 }
 
 .instructions {
-  background-color: red;
+  background-color: slategrey;
+  border-radius: 10px;
+  border: 2px solid white;
   grid-row: 5 / span 16;
   grid-column: 7 / span 1;
   padding: 0 3px;
@@ -81,6 +96,8 @@ footer {
   justify-content: center;
   align-items: center;
   background-color: cornflowerblue;
+  border-radius: 10px;
+  border: 2px solid white;
   grid-row: 23 / span 1;
   grid-column: 3 / span 3;
 }
@@ -103,7 +120,7 @@ h3 {
   align-items: center;
   height: 100%;
   width: 95%;
-  background-color: orangered;
+  background-color: sandybrown;
   border: 1px solid black;
   border-radius: 25px 25px 0 0;
   justify-self: center;
@@ -132,7 +149,7 @@ h3 {
   width: 10px;
   justify-self: center;
   align-self: end;
-  background-color: orangered;
+  background-color: sandybrown;
   border: 1px solid black;
   /* mesh bottom of tower into base */
   border-bottom: 0;

@@ -195,7 +195,6 @@ function generateEventListeners() {
       height: "100%",
       width: "95%",
       "justify-self": "center",
-      "background-color": "rgba(0, 0, 255, 0.2)",
       // make sure it's on top of everything else
       "z-index": "10"
     })
