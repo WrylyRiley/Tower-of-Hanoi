@@ -19,7 +19,10 @@
         <a href="http://zbauer91.github.io">Home Page</a>
       </nav>
       <aside class="game-buttons">
-        <a class="reset-button" onclick="resetGame()">
+        <a class="interact-button" onclick="solveHanoi()">
+          <h3>Solve Game</h3>
+        </a>
+        <a class="interact-button" onclick="resetGame()">
           <h3>Reset Game</h3>
         </a>
         <div id="slidecontainer">
@@ -52,15 +55,13 @@
       </div>
       <div class="tower" id="towerThree">
       </div>
-
-
       <aside class="instructions">
         <h3>The goal of the puzzle is to move all the disks from the leftmost peg to the rightmost peg, adhering to the following
           rules:
           <br/>
           <br/>Move only one disk at a time
           <br/>
-          <br/>A larger disk may not be placed ontop of a smaller disk
+          <br/>A larger disk may not be placed on top of a smaller disk
         </h3>
       </aside>
       <footer>

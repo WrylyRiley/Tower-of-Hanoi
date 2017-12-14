@@ -84,7 +84,9 @@ var gameVars = {
   diskHovering: false,
   diskHoveringWhere: null,
   previouslyClickedTower: null,
-  moves: 0
+  moves: 0,
+  minMoves: 0,
+  timeout: 1000
 }
 
 var disks = {
@@ -117,6 +119,9 @@ function changeDisks(newDiskNum) {
 function resetGame() {
   $(".game-piece").remove()
   gameVars.moves = 0
+  gameVars.gameComplete = false
+  gameVars.minMoves = Math.pow(2, gameVars.numDisks) - 1
+  $("#minimumMoves").html(`Minimum Moves: ${gameVars.minMoves}`)
   updateMoves()
 
   initializeParameters()
@@ -251,17 +256,27 @@ function diskHover(towerID) {
   }
 }
 
-function swapDisks(topDisk, towerDestination) {
+function swapDisks(topDisk, towerDestination, automaticFlag = false) {
+  if (automaticFlag) {
+    // This chunk of code cna ONLY run when you solve the program recursively. The main body of the ode should never set automaticFlag to true
+    // topDisk is now towerSrc
+    var updateInc = 0
+    let towerSource = topDisk
+    // popm topDisk and save it
+    topDisk = disks[towerSource].pop()
+    // push topDisk to destination
+    disks[towerDestination].push(topDisk)
+  } else {
+    disks[gameVars.diskHoveringWhere].pop()
+    disks[towerDestination].push(topDisk)
+  }
   gameVars.moves++
   gameVars.diskHovering = false
-
-  disks[gameVars.diskHoveringWhere].pop()
-  disks[towerDestination].push(topDisk)
   //Returns 3-5
   topDisk.setCol(towerDestination[towerDestination.length - 1])
   //returns relative row, sets to absolute row
   topDisk.setRow(disks[towerDestination].length)
-
+  // Since no disk is hovering, origin is nulled
   gameVars.diskHoveringWhere = null
 }
 function checkDiskSize(topDisk, towerID) {
@@ -272,12 +287,6 @@ function checkDiskSize(topDisk, towerID) {
     return true
   }
   return false
-}
-
-function winCondition() {
-  if (disks["tower-3"].length === 0 && disks["tower-4"].length === 0) {
-    alert("You Win!")
-  }
 }
 // END MODEL CONTROLLER //
 
@@ -304,4 +313,43 @@ function updateMoves() {
 function updateDiskCounter() {
   $("#diskCounter").html(`${gameVars.numDisks} Disks`)
 }
+
+function winCondition() {
+  if (disks["tower-3"].length === 0 && disks["tower-4"].length === 0) {
+    // alert("You Win!")
+    // Add game win box
+    let winBanner = $("<div></div>")
+    winBanner.attr("class", "game-win game-piece")
+    winBanner.html("<h3>You Win!</h3>")
+    winBanner.appendTo($(".game-container"))
+    // add cover to prevent further user input
+    let gameBlock = $("<div></div>")
+    gameBlock.attr("class", "game-block game-piece")
+    gameBlock.appendTo($(".game-container"))
+    $(".game-block").css("display", "block")
+    // gameComplete flag for recursive fuunction
+    gameVars.gameComplete = true
+  }
+}
 // END VIEW CONTROLLER //
+
+// RESURSIVE CONTROLLER //
+
+function solveHanoi() {
+  solveRecursively(gameVars.numDisks, "tower-3", "tower-4", "tower-5")
+}
+function solveRecursively(height, source, destination, buffer) {
+  if (height === 0) {
+    swapDisks(source, destination, true)
+    updateView()
+  } else {
+    solveRecursively(height - 1, source, buffer, destination)
+    // Can't figure ot why the game runs once more after finishing, this fixes that problem
+    if (gameVars.gameComplete) {
+      return
+    }
+    swapDisks(source, destination, true)
+    updateView()
+    solveRecursively(height - 1, buffer, destination, source)
+  }
+}
