@@ -84,7 +84,8 @@ var gameVars = {
   diskHovering: false,
   diskHoveringWhere: null,
   previouslyClickedTower: null,
-  moves: 0
+  moves: 0,
+  minMoves: 0
 }
 
 var disks = {
@@ -117,6 +118,8 @@ function changeDisks(newDiskNum) {
 function resetGame() {
   $(".game-piece").remove()
   gameVars.moves = 0
+  gameVars.minMoves = Math.pow(2, gameVars.numDisks) - 1
+  $("#minimumMoves").html(`<h3>Minimum Moves: ${gameVars.minMoves}</h3>`)
   updateMoves()
 
   initializeParameters()
