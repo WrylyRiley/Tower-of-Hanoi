@@ -24,4 +24,4 @@ None to speak of. Simply load index.html and the game will run just fine.
 
 ### Unsolved problems
 
-The game Tower of Hanoi is used pedagogically to demonstrate the power of recursive algorithms. The general algorithm for solving a game with n-disks is very short, easy to demonstrate, and easier to implement. The goal was to have this as an option, but time constraints coupled with a complete HTML/CSS rewrite, and a subsequent JS rewrite, lead to a lack of implementation.
+The game Tower of Hanoi is used pedagogically to demonstrate the power of recursive algorithms. The general algorithm for solving a game with n-disks is very short, easy to demonstrate, and easier to implement. The goal was to have an animated display of the power of recursion, but due to a very likely lack of proper implementation of a structure such as MVC, and the fact that JS is 100% blocking, the tower just moves to the goal post and indicates that you won.
