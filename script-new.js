@@ -83,6 +83,7 @@ var gameVars = {
   maxDisks: 15,
   diskHovering: false,
   diskHoveringWhere: null,
+  previouslyClickedTower: null,
   moves: 0
 }
 
@@ -100,15 +101,34 @@ var disks = {
 // End Game Variables
 
 // GAME START //
+function initializeParameters() {
+  $("discRange").attr({
+    min: gameVars.minDisks,
+    max: gameVars.maxDisks
+  })
+}
 
-initialGenerateDisks()
-generateEventListeners()
+function changeDiscs(newDiscNum) {
+  numDisks = parseInt(newDiscNum)
+  resetGame()
+}
+
+function resetGame() {
+  $(".game-piece").remove()
+  gameVars.moves = 0
+  updateMoves()
+
+  initializeParameters()
+  initialGenerateDisks()
+  generateEventListeners()
+}
+
+resetGame()
 // END GAME START //
 
 // MODEL CONTROLLER //
 
 function initialGenerateDisks() {
-  gameVars.moves = 0
   let row = 1,
     col = 1
   // Set tower height
@@ -124,7 +144,10 @@ function initialGenerateDisks() {
     // create new div
     let newDiv = $("<div></div>")
     // set ID for later usage
-    newDiv.attr("id", `disk-${newDisk.diskNum}`)
+    newDiv.attr({
+      id: `disk-${newDisk.diskNum}`,
+      class: "game-piece"
+    })
     // Append blank div to game-container
     newDiv.appendTo($(".game-container"))
     // Push new disk's number to array for later validation. They're pushed in opposite order so popping will always return the top disk
@@ -154,9 +177,12 @@ function generateEventListeners() {
     $(".game-container").append(newTower)
     // attach event listener
     newTower.on("click", function() {
+      gameVars.previouslyClickedTower = $(this).attr("id")
       diskHover($(this).attr("id"))
       updateView()
     })
+    //add game-piece class to event listeners
+    newTower.attr("class", "game-piece")
     // Change CSS to make it fit the proper dimensions
     newTower.css({
       "grid-row": "5 / span 16",
@@ -165,7 +191,6 @@ function generateEventListeners() {
       height: "100%",
       width: "95%",
       "justify-self": "center",
-      "background-color": "rgba(50, 50, 200, 0.2)",
       // make sure it's on top of everything else
       "z-index": "10"
     })
@@ -175,7 +200,7 @@ function generateEventListeners() {
 function diskHover(towerID) {
   // grabs top-most disks from tower array
   // logic check for origin tower or destination tower
-  if (gameVars.diskHoveringWhere) {
+  if (gameVars.diskHoveringWhere != null) {
     // there is an origin tower, and this run will be to place the disk in a new place
     var topDisk = disks[gameVars.diskHoveringWhere]
     topDisk = topDisk[topDisk.length - 1]
@@ -185,10 +210,9 @@ function diskHover(towerID) {
     gameVars.diskHoveringWhere = towerID
     topDisk = topDisk[topDisk.length - 1]
   }
-
   // checks if a disk is already hovering
   // checks if the clicked tower has any disks
-  if (!gameVars.diskHovering && disks[towerID]) {
+  if (!gameVars.diskHovering && disks[towerID].length > 0) {
     // flags for a hovering disk
     gameVars.diskHovering = true
     // sets origin tower of newly hovering disk
@@ -200,7 +224,7 @@ function diskHover(towerID) {
       // Condition where origin tower equals destinaton tower
       // remove hovering flag
       gameVars.moves++
-      gameVars.diskIsHovering = false
+      gameVars.diskHovering = false
       // lowers disk
       topDisk.adjustRow(1)
       // null out origin tower
@@ -215,7 +239,7 @@ function diskHover(towerID) {
         if (checkDiskSize(topDisk, towerID)) {
           swapDisks(topDisk, towerID)
         } else {
-          // if this test faisl, the disk will just set itself back down with no other feedback
+          // if this test fails, the disk will just set itself back down with no other feedback
           diskHover(gameVars.diskHoveringWhere)
         }
       }
@@ -225,12 +249,16 @@ function diskHover(towerID) {
 
 function swapDisks(topDisk, towerDestination) {
   gameVars.moves++
+  gameVars.diskHovering = false
+
   disks[gameVars.diskHoveringWhere].pop()
   disks[towerDestination].push(topDisk)
   //Returns 3-5
   topDisk.setCol(towerDestination[towerDestination.length - 1])
   //returns relative row, sets to absolute row
-  topDisk.setRow(towerDestination[towerDestination.length])
+  topDisk.setRow(disks[towerDestination].length)
+
+  gameVars.diskHoveringWhere = null
 }
 function checkDiskSize(topDisk, towerID) {
   //if passed disk's number is less than that of the destination tower's top-most disk's number, return true
@@ -243,7 +271,7 @@ function checkDiskSize(topDisk, towerID) {
 }
 
 function winCondition() {
-  if (!disks["tower-3"] && !disks["tower-4"] && disks["tower-4"]) {
+  if (disks["tower-3"].length === 0 && disks["tower-4"].length === 0) {
     alert("You Win!")
   }
 }
@@ -261,6 +289,10 @@ function updateView() {
       })
     }
   }
+  updateMoves()
 }
 
+function updateMoves() {
+  $("#moveCounter").html(`Moves: ${gameVars.moves}`)
+}
 // END VIEW CONTROLLER //

@@ -48,6 +48,17 @@ nav {
   background-color: orange;
   grid-row: 5 / span 16;
   grid-column: 1 / span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.reset-button {
+  background-color: skyblue;
+  color: brown;
+  width: 60%;
+  border: 1px solid black;
 }
 
 .instructions {
@@ -109,7 +120,7 @@ h3 {
 /* Tower CSS */
 .tower {
   height: 100px;
-  width: 7px;
+  width: 10px;
   justify-self: center;
   align-self: end;
   background-color: orangered;
