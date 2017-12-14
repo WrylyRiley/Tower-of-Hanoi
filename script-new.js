@@ -260,6 +260,7 @@ function swapDisks(topDisk, towerDestination, automaticFlag = false) {
   if (automaticFlag) {
     // This chunk of code cna ONLY run when you solve the program recursively. The main body of the ode should never set automaticFlag to true
     // topDisk is now towerSrc
+    var updateInc = 0
     let towerSource = topDisk
     // popm topDisk and save it
     topDisk = disks[towerSource].pop()
@@ -275,7 +276,7 @@ function swapDisks(topDisk, towerDestination, automaticFlag = false) {
   topDisk.setCol(towerDestination[towerDestination.length - 1])
   //returns relative row, sets to absolute row
   topDisk.setRow(disks[towerDestination].length)
-
+  // Since no disk is hovering, origin is nulled
   gameVars.diskHoveringWhere = null
 }
 function checkDiskSize(topDisk, towerID) {
@@ -291,27 +292,14 @@ function checkDiskSize(topDisk, towerID) {
 
 // VIEW CONTROLLER //
 // Updates all disks at once acounting for all changes that may occur during gameplay. Heavy overhead, especially for a large number of disks, but I've capped this game at 15, so it shouldn't be a problem
-function updateView(autoSolve = false) {
-  // Got help from AlI for figuring out timeouts
-  // incremented timeoput multiplier
-  var timeoutInc = 0
-  // local var timeout set to gameVars' timeout
-  var timeout = gameVars.timeout
-  // zeros local timeout if the user is not auto-solving
-  if (!autoSolve) {
-    timeout = 0
-  }
+function updateView() {
   for (let i = 3; i < 6; i++) {
     let tower = disks[`tower-${i}`]
     for (let j = 0; j < tower.length; j++) {
       let disk = tower[j]
-      timeoutInc++
-      setTimeout(function() {
-        $(`#disk-${disk.diskNum}`).css({
-          "grid-area": `${disk.calculatePosition()}`
-        })
-        timeoutInc++
-      }, timeoutInc * timeout)
+      $(`#disk-${disk.diskNum}`).css({
+        "grid-area": `${disk.calculatePosition()}`
+      })
     }
   }
   updateMoves()
@@ -356,6 +344,7 @@ function solveRecursively(height, source, destination, buffer) {
     updateView()
   } else {
     solveRecursively(height - 1, source, buffer, destination)
+    // Can't figure ot why the game runs once more after finishing, this fixes that problem
     if (gameVars.gameComplete) {
       return
     }
@@ -364,13 +353,3 @@ function solveRecursively(height, source, destination, buffer) {
     solveRecursively(height - 1, buffer, destination, source)
   }
 }
-
-// FUNCTION MoveTower(disk, source, dest, spare):
-// IF disk == 0, THEN:
-//     move disk from source to dest
-// ELSE:
-//     MoveTower(disk - 1, source, spare, dest)   // Step 1 above
-//     move disk from source to dest              // Step 2 above
-//     MoveTower(disk - 1, spare, dest, source)   // Step 3 above
-// END IF
-// END RESURSIVE CONTROLLER //
