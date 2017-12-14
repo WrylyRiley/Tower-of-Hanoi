@@ -276,7 +276,15 @@ function checkDiskSize(topDisk, towerID) {
 
 function winCondition() {
   if (disks["tower-3"].length === 0 && disks["tower-4"].length === 0) {
-    alert("You Win!")
+    // alert("You Win!")
+    // Add game win box
+    $("<h3>You Win!</h3>").appendTo($(".game-win"))
+    $(".game-win").css("display", "flex")
+    // add cover to prevent further user input
+    let gameBlock = $("<div></div>")
+    gameBlock.attr("class", "game-block")
+    gameBlock.appendTo($(".game-container"))
+    $(".game-block").css("display", "block")
   }
 }
 // END MODEL CONTROLLER //

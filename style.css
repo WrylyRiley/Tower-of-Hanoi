@@ -72,6 +72,7 @@ nav a {
   color: white;
   width: 60%;
   border: 1px solid black;
+  cursor: pointer;
 }
 
 .disk-slider {
@@ -89,6 +90,24 @@ nav a {
   grid-row: 5 / span 16;
   grid-column: 7 / span 1;
   padding: 0 3px;
+}
+
+.game-win {
+  grid-area: 5 / 3 / span 3 / span 3;
+  background-color: slategrey;
+  border-radius: 10px;
+  border: 2px solid white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-block {
+  /* used to preent further input after game is completed */
+  grid-area: 5 / 3 / span 17 / span 3;
+  background-color: rgba(0, 0, 0, 0);
+  display: none;
+  z-index: 20;
 }
 
 footer {
