@@ -254,7 +254,25 @@ function diskHover(towerID) {
   }
 }
 
-function swapDisks(topDisk, towerDestination) {
+function swapDisks(topDisk, towerDestination, automaticFlag = false) {
+  if (automaticFlag){
+    // This chunk of code cna ONLY run when you solve the program recursively. The main body of the ode should never set automaticFlag to true
+
+    // topDisk is now towerSrc
+    let towerSource = topDisk
+
+    // increment game moves
+    gameVars.moves++
+
+  disks[towerDestination].push(disks[towerSource].pop())
+  //Returns 3-5
+  topDisk.setCol(towerDestination[towerDestination.length - 1])
+  //returns relative row, sets to absolute row
+  topDisk.setRow(disks[towerDestination].length)
+  }
+
+
+
   gameVars.moves++
   gameVars.diskHovering = false
 
@@ -318,3 +336,32 @@ function winCondition() {
   }
 }
 // END VIEW CONTROLLER //
+
+// RESURSIVE CONTROLLER //
+
+function solveHanoi(){
+  solveRecursively(disks[tower-3].length, disks["tower-3"], disks["tower-4"], disks["tower-5"])
+}
+function solveRecursively(height, source, destination, buffer) {
+  // Returns topDisk
+  chosenDisk = disks[height].length-1
+  // height will always start with tower-3
+  if (height.length === 0){
+    swapDisks(height, source, destination)
+    updateView()
+  } else {
+    solveRecursively()
+
+  }
+}
+
+
+FUNCTION MoveTower(disk, source, dest, spare):
+IF disk == 0, THEN:
+    move disk from source to dest
+ELSE:
+    MoveTower(disk - 1, source, spare, dest)   // Step 1 above
+    move disk from source to dest              // Step 2 above
+    MoveTower(disk - 1, spare, dest, source)   // Step 3 above
+END IF
+// END RESURSIVE CONTROLLER //
