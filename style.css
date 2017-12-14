@@ -67,12 +67,13 @@ nav a {
   flex-direction: column;
 }
 
-.reset-button {
+.interact-button {
   background-color: darkslategrey;
   color: white;
   width: 60%;
   border: 1px solid black;
   cursor: pointer;
+  margin: 10px 0;
 }
 
 .disk-slider {
@@ -100,6 +101,7 @@ nav a {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 19;
 }
 
 .game-block {

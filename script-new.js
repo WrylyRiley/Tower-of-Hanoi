@@ -85,7 +85,8 @@ var gameVars = {
   diskHoveringWhere: null,
   previouslyClickedTower: null,
   moves: 0,
-  minMoves: 0
+  minMoves: 0,
+  timeout: 1000
 }
 
 var disks = {
@@ -118,6 +119,7 @@ function changeDisks(newDiskNum) {
 function resetGame() {
   $(".game-piece").remove()
   gameVars.moves = 0
+  gameVars.gameComplete = false
   gameVars.minMoves = Math.pow(2, gameVars.numDisks) - 1
   $("#minimumMoves").html(`Minimum Moves: ${gameVars.minMoves}`)
   updateMoves()
@@ -255,29 +257,20 @@ function diskHover(towerID) {
 }
 
 function swapDisks(topDisk, towerDestination, automaticFlag = false) {
-  if (automaticFlag){
+  if (automaticFlag) {
     // This chunk of code cna ONLY run when you solve the program recursively. The main body of the ode should never set automaticFlag to true
-
     // topDisk is now towerSrc
     let towerSource = topDisk
-
-    // increment game moves
-    gameVars.moves++
-
-  disks[towerDestination].push(disks[towerSource].pop())
-  //Returns 3-5
-  topDisk.setCol(towerDestination[towerDestination.length - 1])
-  //returns relative row, sets to absolute row
-  topDisk.setRow(disks[towerDestination].length)
+    // popm topDisk and save it
+    topDisk = disks[towerSource].pop()
+    // push topDisk to destination
+    disks[towerDestination].push(topDisk)
+  } else {
+    disks[gameVars.diskHoveringWhere].pop()
+    disks[towerDestination].push(topDisk)
   }
-
-
-
   gameVars.moves++
   gameVars.diskHovering = false
-
-  disks[gameVars.diskHoveringWhere].pop()
-  disks[towerDestination].push(topDisk)
   //Returns 3-5
   topDisk.setCol(towerDestination[towerDestination.length - 1])
   //returns relative row, sets to absolute row
@@ -298,14 +291,27 @@ function checkDiskSize(topDisk, towerID) {
 
 // VIEW CONTROLLER //
 // Updates all disks at once acounting for all changes that may occur during gameplay. Heavy overhead, especially for a large number of disks, but I've capped this game at 15, so it shouldn't be a problem
-function updateView() {
+function updateView(autoSolve = false) {
+  // Got help from AlI for figuring out timeouts
+  // incremented timeoput multiplier
+  var timeoutInc = 0
+  // local var timeout set to gameVars' timeout
+  var timeout = gameVars.timeout
+  // zeros local timeout if the user is not auto-solving
+  if (!autoSolve) {
+    timeout = 0
+  }
   for (let i = 3; i < 6; i++) {
     let tower = disks[`tower-${i}`]
     for (let j = 0; j < tower.length; j++) {
       let disk = tower[j]
-      $(`#disk-${disk.diskNum}`).css({
-        "grid-area": `${disk.calculatePosition()}`
-      })
+      timeoutInc++
+      setTimeout(function() {
+        $(`#disk-${disk.diskNum}`).css({
+          "grid-area": `${disk.calculatePosition()}`
+        })
+        timeoutInc++
+      }, timeoutInc * timeout)
     }
   }
   updateMoves()
@@ -333,35 +339,38 @@ function winCondition() {
     gameBlock.attr("class", "game-block game-piece")
     gameBlock.appendTo($(".game-container"))
     $(".game-block").css("display", "block")
+    // gameComplete flag for recursive fuunction
+    gameVars.gameComplete = true
   }
 }
 // END VIEW CONTROLLER //
 
 // RESURSIVE CONTROLLER //
 
-function solveHanoi(){
-  solveRecursively(disks[tower-3].length, disks["tower-3"], disks["tower-4"], disks["tower-5"])
+function solveHanoi() {
+  solveRecursively(gameVars.numDisks, "tower-3", "tower-4", "tower-5")
 }
 function solveRecursively(height, source, destination, buffer) {
-  // Returns topDisk
-  chosenDisk = disks[height].length-1
-  // height will always start with tower-3
-  if (height.length === 0){
-    swapDisks(height, source, destination)
+  if (height === 0) {
+    swapDisks(source, destination, true)
     updateView()
   } else {
-    solveRecursively()
-
+    solveRecursively(height - 1, source, buffer, destination)
+    if (gameVars.gameComplete) {
+      return
+    }
+    swapDisks(source, destination, true)
+    updateView()
+    solveRecursively(height - 1, buffer, destination, source)
   }
 }
 
-
-FUNCTION MoveTower(disk, source, dest, spare):
-IF disk == 0, THEN:
-    move disk from source to dest
-ELSE:
-    MoveTower(disk - 1, source, spare, dest)   // Step 1 above
-    move disk from source to dest              // Step 2 above
-    MoveTower(disk - 1, spare, dest, source)   // Step 3 above
-END IF
+// FUNCTION MoveTower(disk, source, dest, spare):
+// IF disk == 0, THEN:
+//     move disk from source to dest
+// ELSE:
+//     MoveTower(disk - 1, source, spare, dest)   // Step 1 above
+//     move disk from source to dest              // Step 2 above
+//     MoveTower(disk - 1, spare, dest, source)   // Step 3 above
+// END IF
 // END RESURSIVE CONTROLLER //
