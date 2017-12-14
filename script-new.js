@@ -64,7 +64,7 @@ class Disk {
       "royalblue",
       "saddlebrown"
     ]
-    this.color = colors[this.diskNum]
+    this.color = colors[this.diskNum - 1]
   }
 
   calculateWidth() {
@@ -92,7 +92,7 @@ var disks = {
   "tower-3": [],
   "tower-4": [],
   "tower-5": [],
-  diskHeight: 25,
+  diskHeight: 30,
   towerHeight: function() {
     return this.diskHeight * (gameVars.numDisks + 2)
   }
@@ -102,15 +102,16 @@ var disks = {
 
 // GAME START //
 function initializeParameters() {
-  $("discRange").attr({
+  $("diskRange").attr({
     min: gameVars.minDisks,
     max: gameVars.maxDisks
   })
 }
 
-function changeDiscs(newDiscNum) {
-  numDisks = parseInt(newDiscNum)
+function changeDisks(newDiskNum) {
+  gameVars.numDisks = parseInt(newDiskNum)
   resetGame()
+  updateDiskCounter()
 }
 
 function resetGame() {
@@ -129,6 +130,9 @@ resetGame()
 // MODEL CONTROLLER //
 
 function initialGenerateDisks() {
+  disks["tower-3"] = []
+  disks["tower-4"] = []
+  disks["tower-5"] = []
   let row = 1,
     col = 1
   // Set tower height
@@ -191,6 +195,7 @@ function generateEventListeners() {
       height: "100%",
       width: "95%",
       "justify-self": "center",
+      "background-color": "rgba(0, 0, 255, 0.2)",
       // make sure it's on top of everything else
       "z-index": "10"
     })
@@ -290,9 +295,14 @@ function updateView() {
     }
   }
   updateMoves()
+  winCondition()
 }
 
 function updateMoves() {
   $("#moveCounter").html(`Moves: ${gameVars.moves}`)
+}
+
+function updateDiskCounter() {
+  $("#diskCounter").html(`${gameVars.numDisks} Disks`)
 }
 // END VIEW CONTROLLER //

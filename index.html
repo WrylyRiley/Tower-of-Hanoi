@@ -19,10 +19,13 @@
         <a href="#">Home Page</a>
       </nav>
       <aside class="game-buttons">
-        <h3>Put game game buttons here, please</h3>
         <a class="reset-button" onclick="resetGame()">
           <h3>Reset Game</h3>
         </a>
+        <div id="slidecontainer">
+          <input type="range" min="3" max="15" value="5" id="discRange" class="disc-slider" onchange="changeDisks(this.value)">
+        </div>
+        <h3 id="diskCounter">5 Disks</h3>
         <div>
           <h3 id="moveCounter">Moves: 0</h3>
         </div>
