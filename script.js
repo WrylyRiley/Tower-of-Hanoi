@@ -1,6 +1,7 @@
 //function to create default number of disks and add click listeners
 // start game
 
+// Bunch of old shit, just don't pay attention to it
 
 var gameVars = {
   diskIsHovering: false,
@@ -184,7 +185,7 @@ function winConditionCheck() {
 function changeDiskPosition(diskNum, rowAdjustment, tower = 0) {
   $(`disk-${diskNum}`).attr("row", $(this).attr("row") + rowAdjustment)
   if (tower != 0) {
-    `disk-${diskNum}`.attr("col", gameVars.towerDestination)
+    ;`disk-${diskNum}`.attr("col", gameVars.towerDestination)
     gameVars.towerDestination.pop()
     gameVars.towerDestination.push(`disk-${diskNum}`)
   }
