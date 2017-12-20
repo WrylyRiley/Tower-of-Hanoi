@@ -1,78 +1,81 @@
 // Disk Class
 class Disk {
-  constructor(diskNum, row, col) {
+  constructor (diskNum, row, col) {
     this.color = null
     this.diskNum = diskNum
     this.row = this.convertRow(row)
     this.col = this.convertCol(col)
     this.width = null
+    // AS: I would put comments at "magic numbers" like this! Or make a constant
     this.sizeInc = 5.666666
 
     this.calculateWidth()
     this.determineColor()
   }
 
-  calculatePosition() {
+  calculatePosition () {
     return `${this.row} / ${this.col} / span 1 / span 1`
-    //As a reminder, grid-area is shorthand, so you can call any one of it's constituent properties (e.g. grid-row-start), and get one of these numbers back
+    // As a reminder, grid-area is shorthand, so you can call any one of it's constituent properties (e.g. grid-row-start), and get one of these numbers back
   }
 
-  adjustRow(row) {
+  adjustRow (row) {
     // used for hovering
     this.row = this.row + row
   }
 
-  adjustCol(col) {
+  // AS: Remove unused code!
+  adjustCol (col) {
     // shouldn't relaly be needed
     this.col = this.col + col
   }
 
-  setRow(row) {
+  setRow (row) {
     this.row = this.convertRow(row)
   }
 
-  setCol(col) {
+  setCol (col) {
     this.col = col
   }
-  convertRow(row) {
+
+  convertRow (row) {
     // Top of gameboard is row 6
-    // Bottom of gameoard is row 20
+    // Bottom of gameboard is row 20
     // To make it simple, we'll number rows 1 as the top, and row 15 as the botom
     return 21 - row
   }
 
-  convertCol(col) {
+  convertCol (col) {
     // leftmost column is 3
-    // rightm ost column is 5
+    // rightmost column is 5
     return col + 2
   }
-  determineColor() {
+  determineColor () {
     var colors = [
-      "seagreen",
-      "darkcyan",
-      "peachpuff",
-      "chocolate",
-      "cornflowerblue",
-      "darkkhaki",
-      "darkslateblue",
-      "darkseagreen",
-      "green",
-      "goldenrod",
-      "indianred",
-      "lightslategrey",
-      "olive",
-      "royalblue",
-      "saddlebrown"
+      'seagreen',
+      'darkcyan',
+      'peachpuff',
+      'chocolate',
+      'cornflowerblue',
+      'darkkhaki',
+      'darkslateblue',
+      'darkseagreen',
+      'green',
+      'goldenrod',
+      'indianred',
+      'lightslategrey',
+      'olive',
+      'royalblue',
+      'saddlebrown'
     ]
     this.color = colors[this.diskNum - 1]
   }
 
-  calculateWidth() {
+  calculateWidth () {
     this.width = this.sizeInc + this.diskNum * this.sizeInc
   }
 }
 
-function instantiateDiskProperties() {}
+function instantiateDiskProperties () {}
 // End Disk Class
 
 // Game Variables
@@ -91,11 +94,11 @@ var gameVars = {
 
 var disks = {
   // Names like this to avoid doing more unnecessary math when figuring out column that disk sits i
-  "tower-3": [],
-  "tower-4": [],
-  "tower-5": [],
+  'tower-3': [],
+  'tower-4': [],
+  'tower-5': [],
   diskHeight: 30,
-  towerHeight: function() {
+  towerHeight: function () {
     return this.diskHeight * (gameVars.numDisks + 2)
   }
 }
@@ -103,25 +106,25 @@ var disks = {
 // End Game Variables
 
 // GAME START //
-function initializeParameters() {
-  $("diskRange").attr({
+function initializeParameters () {
+  $('diskRange').attr({
     min: gameVars.minDisks,
     max: gameVars.maxDisks
   })
 }
 
-function changeDisks(newDiskNum) {
+function changeDisks (newDiskNum) {
   gameVars.numDisks = parseInt(newDiskNum)
   resetGame()
   updateDiskCounter()
 }
 
-function resetGame() {
-  $(".game-piece").remove()
+function resetGame () {
+  $('.game-piece').remove()
   gameVars.moves = 0
   gameVars.gameComplete = false
   gameVars.minMoves = Math.pow(2, gameVars.numDisks) - 1
-  $("#minimumMoves").html(`Minimum Moves: ${gameVars.minMoves}`)
+  $('#minimumMoves').html(`Minimum Moves: ${gameVars.minMoves}`)
   updateMoves()
 
   initializeParameters()
@@ -134,14 +137,14 @@ resetGame()
 
 // MODEL CONTROLLER //
 
-function initialGenerateDisks() {
-  disks["tower-3"] = []
-  disks["tower-4"] = []
-  disks["tower-5"] = []
+function initialGenerateDisks () {
+  disks['tower-3'] = []
+  disks['tower-4'] = []
+  disks['tower-5'] = []
   let row = 1,
     col = 1
   // Set tower height
-  $(".tower").css("height", `${disks.towerHeight()}px`)
+  $('.tower').css('height', `${disks.towerHeight()}px`)
   // Loop through in reverse order to stack properly
   for (let i = gameVars.numDisks; i > 0; i--) {
     // Instantiate new disk, store to disks object
@@ -151,62 +154,63 @@ function initialGenerateDisks() {
     // Increment row
     row++
     // create new div
-    let newDiv = $("<div></div>")
+    let newDiv = $('<div></div>')
     // set ID for later usage
     newDiv.attr({
       id: `disk-${newDisk.diskNum}`,
-      class: "game-piece"
+      class: 'game-piece'
     })
     // Append blank div to game-container
-    newDiv.appendTo($(".game-container"))
+    newDiv.appendTo($('.game-container'))
     // Push new disk's number to array for later validation. They're pushed in opposite order so popping will always return the top disk
     disks[`tower-${newDisk.col}`].push(newDisk)
     // Modify new div's CSS to get it to show up in the correct place
+    // AS: I would have a CSS class for most of this, and only change some using JS
     newDiv.css({
-      "background-color": newDisk.color,
-      height: "95%",
+      'background-color': newDisk.color,
+      height: '95%',
       width: `${newDisk.width}%`,
-      "grid-area": newDisk.calculatePosition(),
-      "justify-self": "center",
-      "align-self": "end",
-      "z-index": 3,
-      border: "1px solid black",
-      "border-radius": "10px"
+      'grid-area': newDisk.calculatePosition(),
+      'justify-self': 'center',
+      'align-self': 'end',
+      'z-index': 3,
+      border: '1px solid black',
+      'border-radius': '10px'
     })
   }
 }
 // Generate boxes with event listeners to wait for click events
-function generateEventListeners() {
+function generateEventListeners () {
   for (let i = 3; i < 6; i++) {
     // create new tower listener. Just a blank div
-    newTower = $("<div></div>", {
+    newTower = $('<div></div>', {
       id: `tower-${i}`
     })
     // add div to gameboard
-    $(".game-container").append(newTower)
+    $('.game-container').append(newTower)
     // attach event listener
-    newTower.on("click", function() {
-      gameVars.previouslyClickedTower = $(this).attr("id")
-      diskHover($(this).attr("id"))
+    newTower.on('click', function () {
+      gameVars.previouslyClickedTower = $(this).attr('id')
+      diskHover($(this).attr('id'))
       updateView()
     })
-    //add game-piece class to event listeners
-    newTower.attr("class", "game-piece")
+    // add game-piece class to event listeners
+    newTower.attr('class', 'game-piece')
     // Change CSS to make it fit the proper dimensions
     newTower.css({
-      "grid-row": "5 / span 16",
+      'grid-row': '5 / span 16',
       // Applies to columns 3, 4, and 5
-      "grid-column": `${i} / span 1`,
-      height: "100%",
-      width: "95%",
-      "justify-self": "center",
+      'grid-column': `${i} / span 1`,
+      height: '100%',
+      width: '95%',
+      'justify-self': 'center',
       // make sure it's on top of everything else
-      "z-index": "10"
+      'z-index': '10'
     })
   }
 }
 
-function diskHover(towerID) {
+function diskHover (towerID) {
   // grabs top-most disks from tower array
   // logic check for origin tower or destination tower
   if (gameVars.diskHoveringWhere != null) {
@@ -256,7 +260,7 @@ function diskHover(towerID) {
   }
 }
 
-function swapDisks(topDisk, towerDestination, automaticFlag = false) {
+function swapDisks (topDisk, towerDestination, automaticFlag = false) {
   if (automaticFlag) {
     // This chunk of code cna ONLY run when you solve the program recursively. The main body of the ode should never set automaticFlag to true
     // topDisk is now towerSrc
@@ -265,6 +269,7 @@ function swapDisks(topDisk, towerDestination, automaticFlag = false) {
     // popm topDisk and save it
     topDisk = disks[towerSource].pop()
     // push topDisk to destination
+    console.log
     disks[towerDestination].push(topDisk)
   } else {
     disks[gameVars.diskHoveringWhere].pop()
@@ -272,17 +277,19 @@ function swapDisks(topDisk, towerDestination, automaticFlag = false) {
   }
   gameVars.moves++
   gameVars.diskHovering = false
-  //Returns 3-5
+  // Returns 3-5
   topDisk.setCol(towerDestination[towerDestination.length - 1])
-  //returns relative row, sets to absolute row
+  // returns relative row, sets to absolute row
   topDisk.setRow(disks[towerDestination].length)
   // Since no disk is hovering, origin is nulled
   gameVars.diskHoveringWhere = null
 }
-function checkDiskSize(topDisk, towerID) {
-  //if passed disk's number is less than that of the destination tower's top-most disk's number, return true
+
+function checkDiskSize (topDisk, towerID) {
+  // if passed disk's number is less than that of the destination tower's top-most disk's number, return true
   let destinationDiskNum = disks[towerID]
   destinationDiskNum = destinationDiskNum[destinationDiskNum.length - 1].diskNum
+  // AS: Could also do return topDisk.diskNum < destinationDiskNum
   if (topDisk.diskNum < destinationDiskNum) {
     return true
   }
@@ -291,14 +298,16 @@ function checkDiskSize(topDisk, towerID) {
 // END MODEL CONTROLLER //
 
 // VIEW CONTROLLER //
-// Updates all disks at once acounting for all changes that may occur during gameplay. Heavy overhead, especially for a large number of disks, but I've capped this game at 15, so it shouldn't be a problem
-function updateView() {
+// Updates all disks at once acounting for all changes that may occur during gameplay.
+// Heavy overhead, especially for a large number of disks, but I've capped this game at 15
+// so it shouldn't be a problem
+function updateView () {
   for (let i = 3; i < 6; i++) {
     let tower = disks[`tower-${i}`]
     for (let j = 0; j < tower.length; j++) {
       let disk = tower[j]
       $(`#disk-${disk.diskNum}`).css({
-        "grid-area": `${disk.calculatePosition()}`
+        'grid-area': `${disk.calculatePosition()}`
       })
     }
   }
@@ -306,27 +315,27 @@ function updateView() {
   winCondition()
 }
 
-function updateMoves() {
-  $("#moveCounter").html(`Moves: ${gameVars.moves}`)
+function updateMoves () {
+  $('#moveCounter').html(`Moves: ${gameVars.moves}`)
 }
 
-function updateDiskCounter() {
-  $("#diskCounter").html(`${gameVars.numDisks} Disks`)
+function updateDiskCounter () {
+  $('#diskCounter').html(`${gameVars.numDisks} Disks`)
 }
 
-function winCondition() {
-  if (disks["tower-3"].length === 0 && disks["tower-4"].length === 0) {
+function winCondition () {
+  if (disks['tower-3'].length === 0 && disks['tower-4'].length === 0) {
     // alert("You Win!")
     // Add game win box
-    let winBanner = $("<div></div>")
-    winBanner.attr("class", "game-win game-piece")
-    winBanner.html("<h3>You Win!</h3>")
-    winBanner.appendTo($(".game-container"))
+    let winBanner = $('<div></div>')
+    winBanner.attr('class', 'game-win game-piece')
+    winBanner.html('<h3>You Win!</h3>')
+    winBanner.appendTo($('.game-container'))
     // add cover to prevent further user input
-    let gameBlock = $("<div></div>")
-    gameBlock.attr("class", "game-block game-piece")
-    gameBlock.appendTo($(".game-container"))
-    $(".game-block").css("display", "block")
+    let gameBlock = $('<div></div>')
+    gameBlock.attr('class', 'game-block game-piece')
+    gameBlock.appendTo($('.game-container'))
+    $('.game-block').css('display', 'block')
     // gameComplete flag for recursive fuunction
     gameVars.gameComplete = true
   }
@@ -335,10 +344,14 @@ function winCondition() {
 
 // RESURSIVE CONTROLLER //
 
-function solveHanoi() {
-  solveRecursively(gameVars.numDisks, "tower-3", "tower-4", "tower-5")
+function solveHanoi () {
+  solveRecursively(gameVars.numDisks, 'tower-3', 'tower-4', 'tower-5')
 }
-function solveRecursively(height, source, destination, buffer) {
+
+// AS I would add comments describing the algorithm you used!
+// I tried to get the timeout working for this, I agree that you would probably need to
+// separate your view and model code a little bit for that!
+function solveRecursively (height, source, destination, buffer, offset = 0) {
   if (height === 0) {
     swapDisks(source, destination, true)
     updateView()
@@ -350,6 +363,6 @@ function solveRecursively(height, source, destination, buffer) {
     }
     swapDisks(source, destination, true)
     updateView()
-    solveRecursively(height - 1, buffer, destination, source)
+    solveRecursively(height - 1, buffer, destination, source, offset + 1)
   }
 }

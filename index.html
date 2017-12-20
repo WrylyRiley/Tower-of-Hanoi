@@ -25,6 +25,7 @@
         <a class="interact-button" onclick="resetGame()">
           <h3>Reset Game</h3>
         </a>
+        <!-- AS: Use kebab-case throughout for selectors -->
         <div id="slidecontainer">
           <input type="range" min="3" max="15" value="5" id="discRange" class="disc-slider" onchange="changeDisks(this.value)">
         </div>
@@ -55,9 +56,11 @@
       </div>
       <div class="tower" id="towerThree">
       </div>
+      <!-- AS: Great use of semantic HTML! -->
       <aside class="instructions">
         <h3>The goal of the puzzle is to move all the disks from the leftmost peg to the rightmost peg, adhering to the following
           rules:
+          <!-- AS: Use CSS for spacing instead of BR's -->
           <br/>
           <br/>Move only one disk at a time
           <br/>
