@@ -1,12 +1,16 @@
+/* AS: remove unused code in production */
 /* grid-area: <row-start> / <column-start> / <row-end> / <column-end>; */
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 
+/* AS: It seems like some of these comments are out of order, would look into that */
+/* AS: Great job with using CSS grid! Also, your code is very well formatted */
 body {
   background-color: lavender;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 /* Game Container CSS */
 .game-container {
   margin: 30px 0 0 0;
@@ -16,9 +20,9 @@ body {
   grid-template-columns: 5fr 1fr repeat(3, 6fr) 1fr 5fr;
   grid-template-rows: 5fr 1fr 2fr repeat(19, 1fr) 2fr;
 }
-/* Game Container CSS */
 
 /* General Elements CSS */
+/* Good job using CSS grid! */
 header {
   background-color: slategrey;
   border-radius: 10px;
@@ -91,6 +95,8 @@ nav a {
   grid-row: 5 / span 16;
   grid-column: 7 / span 1;
   padding: 0 5px;
+  /* AS: This makes the instructions scroll if the window gets too small */
+  overflow: scroll;
 }
 
 .game-win {
